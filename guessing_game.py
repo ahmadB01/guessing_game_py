@@ -88,7 +88,7 @@ def update(res: str, rng: (int, int)) -> (int, int):
     Fonction qui retourne un nouveau tuple
     représentant l'intervalle de nombres
     qui contient le nombre correct.
-    Cette instance dépend :
+    Le résultat dépend :
     - de la réponse de l'utilisateur
       entrée en paramètre (`res`) ;
     - et de l'intervalle précédent (`rng`)
@@ -102,7 +102,7 @@ def update(res: str, rng: (int, int)) -> (int, int):
         # Dans le cas où le nombre deviné par l'ordinateur
         # est égal au nombre correct,
         # alors on renvoit l'intervalle :
-        # [computer.guessed; computer.guessed]
+        # [guess(rng); guess(rng)]
         # de sorte à récupérer la valeur trouvée
         # avec guess(rng) plus tard.
         g = guess(rng)

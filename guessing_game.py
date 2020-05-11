@@ -25,19 +25,18 @@ def disp_poss(poss: [str]) -> str:
     Elle prend en paramètre une list de chaines de caractères,
     représentant les labels.
     """
-    return ' ou '.join(map(lambda p: '"{}",'.format(p), poss))
+    return ', ou '.join(map(lambda p: '"{}"'.format(p), poss))
 
 def ask() -> str:
     """
     Fonction qui permet de récupérer la saisie de l'utilisateur
     sous forme de chaine de caractère, puis la retourne.
     """
-    print('\nEntrez :')
-    print('- {} si le nombre auquel vous pensez est plus grand'
+    print('* Si le nombre auquel vous pensez est plus grand, entrez :\n  {}.'
           .format(disp_poss(poss['high'])))
-    print('- {} si le nombre auquel vous pensez est plus petit'
+    print('* Si le nombre auquel vous pensez est plus petit, entrez :\n  {}.'
           .format(disp_poss(poss['low'])))
-    print('- {} si le nombre deviné par l\'ordinateur est correct'
+    print('* Sinon, entrez :\n  {}.'
           .format(disp_poss(poss['eq'])))
     # On empêche l'utilisateur de rentrer une saisie incorrecte.
     while True:
@@ -52,8 +51,9 @@ def ask() -> str:
 
 def guess(rng: (int, int)) -> int:
     """
-    Fonction qui retourne le milieu d'une intervalle `rng`
-    passée en paramètre.
+    Fonction qui retourne le milieu de l'intervalle 
+    représenté par le tuple `rng`
+    passé en paramètre.
     """
     min, max = rng
     return (min + max) // 2
@@ -104,11 +104,11 @@ def update(res: str, rng: (int, int)) -> (int, int):
         # alors on renvoit l'intervalle :
         # [guess(rng); guess(rng)]
         # de sorte à récupérer la valeur trouvée
-        # avec guess(rng) plus tard.
+        # avec guess(rng) plus tard (dans la fonction game_loop).
         g = guess(rng)
         return (g,)*2
 
-def game_loop(rng) -> int:
+def game_loop(rng: (int, int)) -> int:
     """
     Fonction qui renvoit le nombre correct final
     trouvé par l'ordinateur.
@@ -147,7 +147,7 @@ def title(rng: (int, int)):
 def main():
     """
     Fonction principale,
-    qui fait donc office de point d'entrée
+    qui fait donc office de point d'entrée.
     """
     # Le tuple initial qui représente l'intervalle de nombres
     # qui contiendra le nombre correct.

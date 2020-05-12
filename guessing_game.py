@@ -106,7 +106,7 @@ def update(res: str, rng: (int, int)) -> (int, int):
         # de sorte à récupérer la valeur trouvée
         # avec guess(rng) plus tard (dans la fonction game_loop).
         g = guess(rng)
-        return (g,)*2
+        return (g, g)
 
 def game_loop(rng: (int, int)) -> int:
     """

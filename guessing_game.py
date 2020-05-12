@@ -10,13 +10,13 @@ Le code utilise une approche fonctionnelle et déclarative.
 
 # Constante utilisée pour récupérer les labels
 # que peut rentrer l'utilisateur pour guider l'ordinateur
-poss = {
-    'high': ['plus', '+', 'higher', 'high'],
-    'low': ['moins', '-', 'lower', 'low'],
-    'eq': ['bravo', 'egal', '=', 'equal', 'eq'],
+labels = {
+    'high': ('plus', '+', 'higher', 'high'),
+    'low': ('moins', '-', 'lower', 'low'),
+    'eq': ('bravo', 'egal', '=', 'equal', 'eq'),
 }
 
-def disp_poss(poss: [str]) -> str:
+def str_label(cmd: [str]) -> str:
     """
     Fonction utilitaire qui permet de retourner le texte à afficher
     pour présenter les différents labels,
@@ -25,7 +25,8 @@ def disp_poss(poss: [str]) -> str:
     Elle prend en paramètre une list de chaines de caractères,
     représentant les labels.
     """
-    return ', ou '.join(map(lambda p: '"{}"'.format(p), poss))
+    return ', ou '.join(
+        map(lambda label: '"{}"'.format(label), cmd))
 
 def ask() -> str:
     """
@@ -33,23 +34,23 @@ def ask() -> str:
     sous forme de chaine de caractère, puis la retourne.
     """
     print('* Si le nombre auquel vous pensez est plus grand, entrez :\n  {}.'
-          .format(disp_poss(poss['high'])))
+          .format(str_label(labels['high'])))
     print('* Si le nombre auquel vous pensez est plus petit, entrez :\n  {}.'
-          .format(disp_poss(poss['low'])))
+          .format(str_label(labels['low'])))
     print('* Sinon, entrez :\n  {}.'
-          .format(disp_poss(poss['eq'])))
+          .format(str_label(labels['eq'])))
     # On empêche l'utilisateur de rentrer une saisie incorrecte.
     while True:
         # On retire les espaces et on met la saisie en minuscule,
         # pour que la comparaison avec les labels reste valide.
         res = input('> ').strip().lower()
-        if res in poss['high'] \
-                or res in poss['low'] \
-                or res in poss['eq']:
+        if res in labels['high'] \
+                or res in labels['low'] \
+                or res in labels['eq']:
             break
     return res
 
-def guess(rng: (int, int)) -> int:
+def next_rng(rng: (int, int)) -> int:
     """
     Fonction qui retourne le milieu de l'intervalle 
     représenté par le tuple `rng`
@@ -68,20 +69,20 @@ def higher(rng: (int, int)) -> (int, int):
     max = rng[1]
     # Dans le cas où le nombre correct
     # est supérieur au nombre deviné par l'ordinateur
-    # autrement dit `guess(rng)`,
+    # autrement dit `next_rng(rng)`,
     # alors le nombre correct appartient à l'intervalle :
-    # ]guess(rng); max]
+    # ]next_rng(rng); max]
     # où `max` représente le maximum de l'intervalle précédent.
-    return (guess(rng), max)
+    return (next_rng(rng), max)
 
 def lower(rng: (int, int)) -> (int, int):
     min = rng[0]
     # Dans le cas où le nombre correct
-    # est inférieur à `guess(rng)`,
+    # est inférieur à `next_rng(rng)`,
     # alors le nombre correct appartient à l'intervalle :
-    # [min; guess(rng)[
+    # [min; next_rng(rng)[
     # où `min` représente le minimum de l'intervalle précédent.
-    return (min, guess(rng))
+    return (min, next_rng(rng))
 
 def update(res: str, rng: (int, int)) -> (int, int):
     """
@@ -94,19 +95,18 @@ def update(res: str, rng: (int, int)) -> (int, int):
     - et de l'intervalle précédent (`rng`)
       pour pouvoir en déduire le suivant.
     """
-    if res in poss['high']:
+    if res in labels['high']:
         return higher(rng)
-    elif res in poss['low']:
+    elif res in labels['low']:
         return lower(rng)
     else:
         # Dans le cas où le nombre deviné par l'ordinateur
         # est égal au nombre correct,
         # alors on renvoit l'intervalle :
-        # [guess(rng); guess(rng)]
+        # [next_rng(rng); next_rng(rng)]
         # de sorte à récupérer la valeur trouvée
-        # avec guess(rng) plus tard (dans la fonction game_loop).
-        g = guess(rng)
-        return (g, g)
+        # avec next_rng(rng) plus tard (dans la fonction game_loop).
+        return (next_rng(rng),) * 2
 
 def game_loop(rng: (int, int)) -> int:
     """
@@ -121,9 +121,9 @@ def game_loop(rng: (int, int)) -> int:
     pour former une boucle de jeu.
     """
     if rng[0] == rng[1]:
-        return guess(rng)
+        return next_rng(rng)
     else:
-        print('L\'ordinateur a deviné :', guess(rng))
+        print('L\'ordinateur a deviné :', next_rng(rng))
         res = ask()
         return game_loop(update(res, rng))
 

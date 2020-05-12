@@ -108,7 +108,7 @@ def update(res: str, rng: (int, int)) -> (int, int):
         # avec next_rng(rng) plus tard (dans la fonction game_loop).
         return (next_rng(rng),) * 2
 
-def game_loop(rng: (int, int)) -> int:
+def game_loop(rng: (int, int), tries: [int]) -> int:
     """
     Fonction qui renvoit le nombre correct final
     trouvé par l'ordinateur.
@@ -121,11 +121,14 @@ def game_loop(rng: (int, int)) -> int:
     pour former une boucle de jeu.
     """
     if rng[0] == rng[1]:
-        return next_rng(rng)
+        return next_rng(rng), len(tries)
     else:
-        print('L\'ordinateur a deviné :', next_rng(rng))
+        guess = next_rng(rng)
+        tries_upt = tries + [guess]
+        print('L\'ordinateur a deviné :', guess)
+        print('Essais :', tries_upt)
         res = ask()
-        return game_loop(update(res, rng))
+        return game_loop(update(res, rng), tries_upt)
 
 def title(rng: (int, int)):
     """
@@ -155,8 +158,9 @@ def main():
     # une meilleure précision à l'ordinateur.
     init_rng = (0, 10001)
     title(init_rng)
-    result = game_loop(init_rng)
-    print('L\'ordinateur a gagné encore une fois!')
+    result, n_tries = game_loop(init_rng, [])
+    print('L\'ordinateur a gagné encore une fois en {} coups!'
+          .format(n_tries))
     print('Le nombre auquel vous pensiez était donc :', result)
 
 if __name__ == '__main__':

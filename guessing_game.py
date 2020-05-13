@@ -46,12 +46,11 @@ def ask(guess, tries):
                or res in labels['eq']:
             return res
 
-def update(res, rng):
+def update(res, rng, guess):
     """
     Fonction qui met à jour l'intervalle
     en fonction de la réponse de l'utilisateur
     """
-    guess = sum(rng) // 2
     if res in labels['high']:
         return guess, rng[1]
     elif res in labels['low']:
@@ -72,7 +71,7 @@ def loop(rng, tries):
         guess = sum(rng) // 2
         tries.append(guess)
         res = ask(guess, tries)
-        return loop(update(res, rng), tries)
+        return loop(update(res, rng, guess), tries)
 
 def title(rng):
     """
